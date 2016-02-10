@@ -87,6 +87,13 @@ class Matrix_importer {
 			// Reset the hack
 			ee()->config->config['site_id'] = $original_site_id;
 
+			$new_field_settings = MatrixConverter::convertSettings(unserialize(base64_decode($matrix['field_settings'])));
+
+			// Set new field settings from converted Matrix settings
+			ee()->db->set('field_settings', base64_encode(serialize($new_field_settings)))
+				->where('field_id', $field_id)
+				->update('channel_fields');
+
 			$new_columns = MatrixConverter::convertMatrixColumns($columns[$matrix['field_id']], $grid_fieldtypes, $field_id);
 
 			// Create new columns and gather new column IDs to map to old columns

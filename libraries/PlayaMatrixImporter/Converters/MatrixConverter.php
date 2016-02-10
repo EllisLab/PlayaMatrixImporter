@@ -34,6 +34,32 @@ use PlayaMatrixImporter\Converters\TextCellConverter;
 class MatrixConverter
 {
 	/**
+	 * Given an array of Matrix field settings, returns an EE-compatible equivalent for Grid
+	 *
+	 * @param	array	Decoded and unserialized field_settings for a Matrix field
+	 * @return	array	Equivalent native Grid field settings
+	 */
+	public static function convertSettings($settings)
+	{
+		$defaults = array(
+			'grid_min_rows'	=> 0,
+			'grid_max_rows'	=> ''
+		);
+
+		foreach (array(
+			'min_rows' => 'grid_min_rows',
+			'max_rows' => 'grid_max_rows') as $cell_key => $field_key)
+		{
+			if (isset($settings[$cell_key]))
+			{
+				$defaults[$field_key] = $settings[$cell_key];
+			}
+		}
+
+		return $defaults;
+	}
+
+	/**
 	 * Given a Matrix column, creates a the Grid column-equivalent
 	 *
 	 * @param	array	Database result array of a single Matrix column
