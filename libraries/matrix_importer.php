@@ -2,6 +2,7 @@
 
 use PlayaMatrixImporter\Converters\PlayaConverter;
 use PlayaMatrixImporter\Converters\MatrixConverter;
+use PlayaMatrixImporter\Converters\AssetsCellConverter;
 
 /**
  * ExpressionEngine - by EllisLab
@@ -127,6 +128,9 @@ class Matrix_importer {
 
 		// Import Playa data for Grid columns
 		$this->import_playa_data($matrix_to_grid_fields, $matrix_to_grid_cols);
+
+		// Import Assets data
+		$this->import_assets_data($matrix_to_grid_fields, $matrix_to_grid_cols);
 
 		// For columns marked as searchable, copy their searchable text over
 		// to the new Grid fields=
@@ -287,6 +291,36 @@ class Matrix_importer {
 			);
 
 			ee()->db->insert_batch('relationships', $new_relationships);
+		}
+	}
+
+	/**
+	 * Import Assets data from assets_selections table
+	 *
+	 * @param	array	Assocative array of Matrix field IDs to Grid field IDs
+	 * @param	array	Assocative array of Matrix column IDs to Grid column IDs
+	 * @return	void
+	 */
+	private function import_assets_data($matrix_to_grid_fields, $matrix_to_grid_cols)
+	{
+		if ( ! ee()->db->table_exists('assets_selections'))
+		{
+			return;
+		}
+
+		$assets_selections = ee()->db->where('content_type', 'matrix')
+			->get('assets_selections')
+			->result_array();
+
+		if (count($assets_selections))
+		{
+			$new_assets_selections = AssetsCellConverter::convertData(
+				$assets_selections,
+				$matrix_to_grid_fields,
+				$matrix_to_grid_cols
+			);
+
+			ee()->db->insert_batch('assets_selections', $new_assets_selections);
 		}
 	}
 }
