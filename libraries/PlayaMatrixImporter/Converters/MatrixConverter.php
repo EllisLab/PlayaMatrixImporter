@@ -249,6 +249,13 @@ class MatrixConverter
 				}
 			}
 
+			// Bring over Publisher data if present, too
+			if (isset($row['publisher_lang_id']) && isset($row['publisher_status']))
+			{
+				$new_grid_row['publisher_lang_id'] = $row['publisher_lang_id'];
+				$new_grid_row['publisher_status'] = $row['publisher_status'];
+			}
+
 			$grid_data[] = $new_grid_row;
 		}
 
