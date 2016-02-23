@@ -93,6 +93,31 @@ class Pm_import_common {
 
 		return $playa_relationships;
 	}
+
+	/**
+	 * Adds publisher_lang_id and publisher_status columns to a table in order
+	 * to preserve Publisher data
+	 *
+	 * @param	string	Name of table to add columns to
+	 */
+	public function add_publisher_columns($table_name)
+	{
+		ee()->load->library('smartforge');
+		ee()->smartforge->add_column($table_name, array(
+			'publisher_lang_id' => array(
+				'type'       => 'int',
+				'constraint' => 4,
+				'null'       => FALSE,
+				'default'    => ee()->config->item('publisher_default_language_id') ?: 1
+			),
+			'publisher_status' => array(
+				'type'       => 'varchar',
+				'constraint' => 24,
+				'null'       => TRUE,
+				'default'    => 'open'
+			)
+		));
+	}
 }
 
 // EOF

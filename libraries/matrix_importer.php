@@ -53,7 +53,6 @@ class Matrix_importer {
 		ee()->load->library('api');
 		ee()->api->instantiate('channel_fields');
 		ee()->load->model('grid_model');
-		ee()->load->library('smartforge');
 
 		$original_site_id = ee()->config->item('site_id');
 
@@ -120,25 +119,10 @@ class Matrix_importer {
 			$matrix_data = $this->get_matrix_data($new_column_ids, $matrix['field_id'], $playa_columns);
 			$new_data = MatrixConverter::convertMatrixData($matrix_data, $new_column_ids, $columns[$matrix['field_id']]);
 
-			// Add publisher_lang_id and publisher_status columns to this field
-			// if we need to
+			// Add Publisher fields if installed
 			if (ee()->addons_model->module_installed('publisher'))
 			{
-				ee()->load->library('smartforge');
-				ee()->smartforge->add_column('channel_grid_field_'.$field_id, array(
-					'publisher_lang_id' => array(
-						'type'       => 'int',
-						'constraint' => 4,
-						'null'       => FALSE,
-						'default'    => ee()->config->item('publisher_default_language_id') ?: 1
-					),
-					'publisher_status' => array(
-						'type'       => 'varchar',
-						'constraint' => 24,
-						'null'       => TRUE,
-						'default'    => 'open'
-					)
-				));
+				ee()->pm_import_common->add_publisher_columns('channel_grid_field_'.$field_id);
 			}
 
 			// Fill Grid field with new data
