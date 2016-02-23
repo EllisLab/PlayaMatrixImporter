@@ -49,3 +49,7 @@ Matrix celltypes and native ExpressionEngine fieldtypes do not mirror functional
 
 * Fieldpack List essentially stored its data like a Textarea would, so we've opted to map that celltype to a Textarea. But, this will not get you the front-end tag-pair syntax that comes with Fieldpack List that allows you to loop through the list items.
 * Fieldpack celltypes that deal with key/value options like Dropdown, Multiselect, Pill, Radio Buttons, and Switch will no longer have access to those keys in templates. Since ExpressionEngine's native equivalent fieldtypes only work with values, only the values will be preserved.
+
+## Other third-party add-on notes
+
+* If you have Publisher and Low Search installed, you'll need to regenerate Collections before editing entries.
