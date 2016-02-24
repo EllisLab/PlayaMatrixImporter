@@ -120,12 +120,21 @@ class PlayaConverter
 
 		foreach ($playa_relationships as $playa_rel)
 		{
-			$relationships[] = array(
+			$relationship = array(
 				'parent_id'	=> $playa_rel['parent_entry_id'],
 				'field_id'	=> $new_field_id,
 				'child_id'	=> $playa_rel['child_entry_id'],
 				'order'		=> $playa_rel['rel_order']
 			);
+
+			// Bring over Publisher data if present, too
+			if (isset($playa_rel['publisher_lang_id']) && isset($playa_rel['publisher_status']))
+			{
+				$relationship['publisher_lang_id'] = $playa_rel['publisher_lang_id'];
+				$relationship['publisher_status'] = $playa_rel['publisher_status'];
+			}
+
+			$relationships[] = $relationship;
 		}
 
 		return $relationships;
@@ -146,7 +155,7 @@ class PlayaConverter
 
 		foreach ($playa_relationships as $playa_rel)
 		{
-			$relationships[] = array(
+			$relationship = array(
 				'parent_id'			=> $playa_rel['parent_entry_id'],
 				'field_id'			=> $matrix_to_grid_cols[$playa_rel['parent_col_id']],
 				'child_id'			=> $playa_rel['child_entry_id'],
@@ -155,6 +164,43 @@ class PlayaConverter
 				'grid_col_id'		=> $matrix_to_grid_cols[$playa_rel['parent_col_id']],
 				'grid_row_id'		=> $playa_rel['parent_row_id'],
 			);
+
+			// Bring over Publisher data if present, too
+			if (isset($playa_rel['publisher_lang_id']) && isset($playa_rel['publisher_status']))
+			{
+				$relationship['publisher_lang_id'] = $playa_rel['publisher_lang_id'];
+				$relationship['publisher_status'] = $playa_rel['publisher_status'];
+			}
+
+			$relationships[] = $relationship;
+		}
+
+		return $relationships;
+	}
+
+	/**
+	 * When Publisher is installed, records taken straight from the Playa table are intermixed
+	 * with draft entries and other languages; those rows will go into the publisher_relationships
+	 * table, but the only rows that should go into the relationships table are ones that are
+	 * a) open and b) belong to the default language
+	 *
+	 * @param	array	Array of relationships formatted to be batch-inserted into the publisher_relationships table
+	 * @param	array	Default Publisher language ID
+	 * @return	array	Array of relationships ready to be batch-inserted into the relationships table
+	 */
+	public static function filterPublisherRelationships(array $relationships, $default_lang_id)
+	{
+		foreach ($relationships as $key => $value)
+		{
+			// Only keep open items and items in the default language
+			if ($value['publisher_lang_id'] != $default_lang_id OR $value['publisher_status'] != 'open')
+			{
+				unset($relationships[$key]);
+			}
+
+			// These columns aren't in the relationships table
+			unset($relationships[$key]['publisher_lang_id']);
+			unset($relationships[$key]['publisher_status']);
 		}
 
 		return $relationships;

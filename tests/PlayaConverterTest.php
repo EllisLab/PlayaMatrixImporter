@@ -3072,4 +3072,254 @@ class PlayaConverterTest extends \PHPUnit_Framework_TestCase {
 
 		return $return;
 	}
+
+	/**
+	 * Test PlayaConverter::convertPlayaRelationshipsForGrid() method
+	 */
+	public function testPublisher()
+	{
+		$data = array(
+			0 => array(
+				'rel_id' => '2058',
+				'parent_entry_id' => '394',
+				'parent_field_id' => '40',
+				'parent_col_id' => NULL,
+				'parent_row_id' => NULL,
+				'parent_var_id' => NULL,
+				'parent_is_draft' => '0',
+				'child_entry_id' => '278',
+				'rel_order' => '1',
+				'publisher_lang_id' => 1,
+				'publisher_status' => 'open'
+			) ,
+			1 => array(
+				'rel_id' => '2057',
+				'parent_entry_id' => '394',
+				'parent_field_id' => '40',
+				'parent_col_id' => NULL,
+				'parent_row_id' => NULL,
+				'parent_var_id' => NULL,
+				'parent_is_draft' => '0',
+				'child_entry_id' => '245',
+				'rel_order' => '0',
+				'publisher_lang_id' => 2,
+				'publisher_status' => 'open'
+			) ,
+			2 => array(
+				'rel_id' => '786',
+				'parent_entry_id' => '410',
+				'parent_field_id' => '40',
+				'parent_col_id' => NULL,
+				'parent_row_id' => NULL,
+				'parent_var_id' => NULL,
+				'parent_is_draft' => '0',
+				'child_entry_id' => '349',
+				'rel_order' => '1',
+				'publisher_lang_id' => 3,
+				'publisher_status' => 'draft'
+			) ,
+			3 => array(
+				'rel_id' => '785',
+				'parent_entry_id' => '410',
+				'parent_field_id' => '40',
+				'parent_col_id' => NULL,
+				'parent_row_id' => NULL,
+				'parent_var_id' => NULL,
+				'parent_is_draft' => '0',
+				'child_entry_id' => '315',
+				'rel_order' => '0',
+				'publisher_lang_id' => 1,
+				'publisher_status' => 'open'
+			)
+		);
+		$expected = array(
+			0 => array(
+				'parent_id' => '394',
+				'field_id' => 120,
+				'child_id' => '278',
+				'order' => '1',
+				'publisher_lang_id' => 1,
+				'publisher_status' => 'open'
+			) ,
+			1 => array(
+				'parent_id' => '394',
+				'field_id' => 120,
+				'child_id' => '245',
+				'order' => '0',
+				'publisher_lang_id' => 2,
+				'publisher_status' => 'open'
+			) ,
+			2 => array(
+				'parent_id' => '410',
+				'field_id' => 120,
+				'child_id' => '349',
+				'order' => '1',
+				'publisher_lang_id' => 3,
+				'publisher_status' => 'draft'
+			) ,
+			3 => array(
+				'parent_id' => '410',
+				'field_id' => 120,
+				'child_id' => '315',
+				'order' => '0',
+				'publisher_lang_id' => 1,
+				'publisher_status' => 'open'
+			)
+		);
+
+		$new_data = PlayaConverter::convertPlayaRelationships($data, 120);
+		$this->assertEquals($expected, $new_data, 'Should preserve Publisher columns');
+
+		$expected = array(
+			0 => array(
+				'parent_id' => '394',
+				'field_id' => 120,
+				'child_id' => '278',
+				'order' => '1',
+			) ,
+			3 => array(
+				'parent_id' => '410',
+				'field_id' => 120,
+				'child_id' => '315',
+				'order' => '0',
+			)
+		);
+
+		$new_data = PlayaConverter::filterPublisherRelationships($new_data, 1);
+		$this->assertEquals($expected, $new_data, 'Should filter out certain relationships based on Publisher data');
+
+		$matrix_to_grid_fields = array(
+			61 => 133
+		);
+		$matrix_to_grid_cols = array(
+			23 => 38
+		);
+		$data = array(
+			0 => array(
+				'rel_id' => '2953',
+				'parent_entry_id' => '800',
+				'parent_field_id' => '61',
+				'parent_col_id' => '23',
+				'parent_row_id' => '2210',
+				'parent_var_id' => NULL,
+				'parent_is_draft' => '0',
+				'child_entry_id' => '1200',
+				'rel_order' => '0',
+				'publisher_lang_id' => 1,
+				'publisher_status' => 'open'
+			) ,
+			1 => array(
+				'rel_id' => '2952',
+				'parent_entry_id' => '800',
+				'parent_field_id' => '61',
+				'parent_col_id' => '23',
+				'parent_row_id' => '2209',
+				'parent_var_id' => NULL,
+				'parent_is_draft' => '0',
+				'child_entry_id' => '1199',
+				'rel_order' => '0',
+				'publisher_lang_id' => 2,
+				'publisher_status' => 'open'
+			) ,
+			2 => array(
+				'rel_id' => '2951',
+				'parent_entry_id' => '800',
+				'parent_field_id' => '61',
+				'parent_col_id' => '23',
+				'parent_row_id' => '2202',
+				'parent_var_id' => NULL,
+				'parent_is_draft' => '0',
+				'child_entry_id' => '1198',
+				'rel_order' => '0',
+				'publisher_lang_id' => 3,
+				'publisher_status' => 'draft'
+			) ,
+			3 => array(
+				'rel_id' => '2950',
+				'parent_entry_id' => '800',
+				'parent_field_id' => '61',
+				'parent_col_id' => '23',
+				'parent_row_id' => '2201',
+				'parent_var_id' => NULL,
+				'parent_is_draft' => '0',
+				'child_entry_id' => '1197',
+				'rel_order' => '0',
+				'publisher_lang_id' => 1,
+				'publisher_status' => 'open'
+			)
+		);
+		$expected = array(
+			0 => array(
+				'parent_id' => '800',
+				'field_id' => 38,
+				'child_id' => '1200',
+				'order' => '0',
+				'grid_field_id' => 133,
+				'grid_col_id' => 38,
+				'grid_row_id' => '2210',
+				'publisher_lang_id' => 1,
+				'publisher_status' => 'open'
+			) ,
+			1 => array(
+				'parent_id' => '800',
+				'field_id' => 38,
+				'child_id' => '1199',
+				'order' => '0',
+				'grid_field_id' => 133,
+				'grid_col_id' => 38,
+				'grid_row_id' => '2209',
+				'publisher_lang_id' => 2,
+				'publisher_status' => 'open'
+			) ,
+			2 => array(
+				'parent_id' => '800',
+				'field_id' => 38,
+				'child_id' => '1198',
+				'order' => '0',
+				'grid_field_id' => 133,
+				'grid_col_id' => 38,
+				'grid_row_id' => '2202',
+				'publisher_lang_id' => 3,
+				'publisher_status' => 'draft'
+			) ,
+			3 => array(
+				'parent_id' => '800',
+				'field_id' => 38,
+				'child_id' => '1197',
+				'order' => '0',
+				'grid_field_id' => 133,
+				'grid_col_id' => 38,
+				'grid_row_id' => '2201',
+				'publisher_lang_id' => 1,
+				'publisher_status' => 'open'
+			)
+		);
+
+		$new_data = PlayaConverter::convertPlayaRelationshipsForGrid($data, $matrix_to_grid_fields, $matrix_to_grid_cols);
+		$this->assertEquals($expected, $new_data, 'Should preserve Publisher columns in Matrix relationships');
+
+		$expected = array(
+			0 => array(
+				'parent_id' => '800',
+				'field_id' => 38,
+				'child_id' => '1200',
+				'order' => '0',
+				'grid_field_id' => 133,
+				'grid_col_id' => 38,
+				'grid_row_id' => '2210'
+			) ,
+			3 => array(
+				'parent_id' => '800',
+				'field_id' => 38,
+				'child_id' => '1197',
+				'order' => '0',
+				'grid_field_id' => 133,
+				'grid_col_id' => 38,
+				'grid_row_id' => '2201'
+			)
+		);
+
+		$new_data = PlayaConverter::filterPublisherRelationships($new_data, 1);
+		$this->assertEquals($expected, $new_data, 'Should filter out certain Matrix relationships based on Publisher data');
+	}
 }

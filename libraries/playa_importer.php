@@ -42,6 +42,7 @@ class Playa_importer {
 
 		ee()->load->library('api');
 		ee()->api->instantiate('channel_fields');
+		ee()->load->model('addons_model');
 
 		$new_field_ids = array();
 
@@ -76,6 +77,16 @@ class Playa_importer {
 			ee()->db->set('field_settings', base64_encode(serialize($new_field_settings)))
 				->where('field_id', $field_id)
 				->update('channel_fields');
+
+			if (ee()->addons_model->module_installed('publisher') && ee()->db->table_exists('publisher_relationships'))
+			{
+				ee()->db->insert_batch('publisher_relationships', $new_relationships);
+
+				$new_relationships = PlayaConverter::filterPublisherRelationships(
+					$new_relationships,
+					ee()->config->item('publisher_default_language_id') ?: 1
+				);
+			}
 
 			// Finally, import Playa relationships
 			ee()->db->insert_batch('relationships', $new_relationships);
