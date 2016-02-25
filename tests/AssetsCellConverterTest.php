@@ -42,7 +42,8 @@ class AssetCellConverterTest extends \PHPUnit_Framework_TestCase {
 				'element_id' => NULL,
 				'content_type' => 'matrix',
 				'sort_order' => '0',
-				'is_draft' => '0'
+				'is_draft' => '0',
+				'selection_id' => 1
 			),
 			array(
 				'file_id' => '1',
@@ -54,7 +55,8 @@ class AssetCellConverterTest extends \PHPUnit_Framework_TestCase {
 				'element_id' => NULL,
 				'content_type' => 'matrix',
 				'sort_order' => '0',
-				'is_draft' => '0'
+				'is_draft' => '0',
+				'selection_id' => 2
 			),
 			array(
 				'file_id' => '1',
@@ -66,7 +68,8 @@ class AssetCellConverterTest extends \PHPUnit_Framework_TestCase {
 				'element_id' => NULL,
 				'content_type' => 'matrix',
 				'sort_order' => '0',
-				'is_draft' => '0'
+				'is_draft' => '0',
+				'selection_id' => 3
 			)
 		);
 

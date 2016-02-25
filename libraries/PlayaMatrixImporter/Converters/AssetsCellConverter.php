@@ -43,6 +43,13 @@ class AssetsCellConverter {
 			$row['field_id'] = $matrix_to_grid_fields[$row['field_id']];
 			$row['col_id'] = $matrix_to_grid_cols[$row['col_id']];
 			$row['content_type'] = 'grid';
+
+			// Publisher adds this column; if it's there, get rid of it so we'll
+			// create new primary key values
+			if (isset($row['selection_id']))
+			{
+				unset($row['selection_id']);
+			}
 		}
 
 		return $assets_selections;
