@@ -58,7 +58,15 @@ class El_playamatrix_importer_mcp {
 			return '<p class="notice">'.lang('grid_relationships_not_installed').'</p>';
 		}
 
-		return lang('el_playamatrix_importer_module_long_description')
+		$success_message = '';
+
+		if (ee()->session->flashdata('success'))
+		{
+			$success_message = '<p class="success"><b>'.ee()->session->flashdata('success').'</b></p>';
+		}
+
+		return $success_message.
+			lang('el_playamatrix_importer_module_long_description')
 			.form_open($this->_form_base_url.AMP.'method=do_import')
 			.form_submit('submit', lang('btn_import'), 'class="submit"')
 			.form_close();
@@ -98,7 +106,7 @@ class El_playamatrix_importer_mcp {
 		$new_relationship_ids = ee()->playa_importer->do_import();
 		$new_grid_ids = ee()->matrix_importer->do_import();
 
-		ee()->session->set_flashdata('message_success', sprintf(lang('import_completed'), count($new_relationship_ids), count($new_grid_ids)));
+		ee()->session->set_flashdata('success', sprintf(lang('import_completed'), count($new_relationship_ids), count($new_grid_ids)));
 		ee()->functions->redirect($this->_base_url);
 	}
 

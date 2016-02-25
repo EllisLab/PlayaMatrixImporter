@@ -15,7 +15,7 @@ $lang = array(
 
 	'btn_import' => 'Import',
 
-	'import_completed' => 'Import has created %d new Relationship fields and %d new Grid fields'
+	'import_completed' => 'Success: Import has created %d new Relationship fields and %d new Grid fields'
 );
 
 // EOF
