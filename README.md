@@ -53,3 +53,7 @@ Matrix celltypes and native ExpressionEngine fieldtypes do not mirror functional
 ## Other third-party add-on notes
 
 * If you have Publisher and Low Search installed, you'll need to regenerate Collections before editing entries.
+
+## Problems?
+
+If you run into anything, head on over to [the issues](https://github.com/EllisLab/PlayaMatrixImporter/issues) to see if a similar issue has been reported, or to submit a new one.
