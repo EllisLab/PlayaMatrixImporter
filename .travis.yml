@@ -12,6 +12,7 @@ install:
 
 script:
   - vendor/bin/parallel-lint --exclude vendor .
+  - phpunit
 
 before_deploy: "zip -r 'el_playamatrix_importer' el_playamatrix_importer"
 
