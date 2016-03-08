@@ -1,6 +1,6 @@
 <?php
 
-require_once('libraries/autoload.php');
+require_once('el_playamatrix_importer/libraries/autoload.php');
 use PlayaMatrixImporter\Converters\TextCellConverter;
 
 class TextCellConverterTest extends \PHPUnit_Framework_TestCase {
