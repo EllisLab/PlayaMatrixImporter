@@ -14,3 +14,14 @@ script:
   - vendor/bin/parallel-lint --exclude vendor .
 
 before_deploy: "zip -r 'el_playamatrix_importer' el_playamatrix_importer"
+
+deploy:
+  provider: releases
+  api_key:
+    secure: XQImymFZzWUCke6ZBT1Em4LdiLaa8AE4Fg3PZEAPzOnHiPI/XKdc6ifk8OHjmS3lfH79BXzrv5C3oZFWQkOzZ6IAIYKbgWn7CVli4S6iAq+dx/jV5U0LAjLhUwIvK8huT/rzGBuba4fHZWpdmBeshV7Dv0dN1mKN72gC8t1CrtgVwSoO0qWInVYQJIkRbv09ejVfPkQSJFhKAD7Hifw9n/rs1bl3C+vSQAmh3z2iTQfQ9Pj5bh/FYorJXfCtUqinmN2JKlLOpKy3YsHzOAW+WHWxBJ5RB7off7JJrV+Wb8qjaDhfqr1ilJtTVmTRubOaAxyCP419i+eyUNZzle0iUg3nxBF1EHj/wld99R10slLpqWyBV2vnkXpS42yzw1h1oZjdhEEEDsS9QA85cFXhY6CnSuG4+P+CuF/cHu6qafDYnda+JLB9dkRS1TfOim7wzV0PghBoQnns8rr8sxNAJGHVzyfeLcnZVN5RR2eShIeRSrrLrEZJXUd0T35XVpSj9D2Tiew3nIowW3xRY3Mn4/7wFuKu4us3Xmh2o+TEYBllpGnraog00CcUzqfXNc9yY8bKrRUpehsmFxaB5XLp9/MVlzplP1seteOle/q9RJXlaz56QFRzdAkzTbHus9t4Fw2q7rTIl56/8NtddsuuuVeID0+SgdbRUJ0JCMTbalg=
+  file: el_playamatrix_importer.zip
+  on:
+    repo: EllisLab/PlayaMatrixImporter
+    php: 7.0
+    tags: true
+    condition: $TRAVIS_PULL_REQUEST = false
