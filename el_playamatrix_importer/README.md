@@ -1,5 +1,7 @@
 # Playa & Matrix Importer for ExpressionEngine 2
 
+![](https://travis-ci.org/EllisLab/PlayaMatrixImporter.svg?branch=master)
+
 This is a module for importing existing Playa and Matrix fields into new Relationship and Grid fields. The import is *non-destructive*, meaning it doesn't convert or change the existing fields or data in any way. It creates _new_ fields and copies the data over to them, so you have a chance to inspect and check that the import has done its job before you commit to the new fields.
 
 ## Prerequisites
