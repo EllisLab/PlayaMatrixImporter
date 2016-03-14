@@ -71,25 +71,33 @@ class Playa_importer {
 			ee()->config->config['site_id'] = $original_site_id;
 
 			$new_field_settings = PlayaConverter::convertSettings(unserialize(base64_decode($playa['field_settings'])));
-			$new_relationships = PlayaConverter::convertPlayaRelationships($playa_relationships[$playa['field_id']], $field_id);
+
+			$new_relationships = array();
+			if (isset($playa_relationships[$playa['field_id']]))
+			{
+				$new_relationships = PlayaConverter::convertPlayaRelationships($playa_relationships[$playa['field_id']], $field_id);
+			}
 
 			// Set new field settings from translated Playa settings
 			ee()->db->set('field_settings', base64_encode(serialize($new_field_settings)))
 				->where('field_id', $field_id)
 				->update('channel_fields');
 
-			if (ee()->addons_model->module_installed('publisher') && ee()->db->table_exists('publisher_relationships'))
+			if ( ! empty($new_relationships))
 			{
-				ee()->db->insert_batch('publisher_relationships', $new_relationships);
+				if (ee()->addons_model->module_installed('publisher') && ee()->db->table_exists('publisher_relationships'))
+				{
+					ee()->db->insert_batch('publisher_relationships', $new_relationships);
 
-				$new_relationships = PlayaConverter::filterPublisherRelationships(
-					$new_relationships,
-					ee()->config->item('publisher_default_language_id') ?: 1
-				);
+					$new_relationships = PlayaConverter::filterPublisherRelationships(
+						$new_relationships,
+						ee()->config->item('publisher_default_language_id') ?: 1
+					);
+				}
+
+				// Finally, import Playa relationships
+				ee()->db->insert_batch('relationships', $new_relationships);
 			}
-
-			// Finally, import Playa relationships
-			ee()->db->insert_batch('relationships', $new_relationships);
 
 			$new_field_ids[] = $field_id;
 		}
