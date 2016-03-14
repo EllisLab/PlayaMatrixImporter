@@ -290,6 +290,11 @@ class Matrix_importer {
 	 */
 	private function import_playa_data($matrix_to_grid_fields, $matrix_to_grid_cols)
 	{
+		if ( ! ee()->db->table_exists('playa_relationships'))
+		{
+			return;
+		}
+
 		$playa_relationships = ee()->db->where('parent_col_id IS NOT NULL')
 			->get('playa_relationships')
 			->result_array();

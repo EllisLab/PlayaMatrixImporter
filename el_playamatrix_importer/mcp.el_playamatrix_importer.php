@@ -102,9 +102,21 @@ class El_playamatrix_importer_mcp {
 
 		ee()->load->library(array('playa_importer', 'matrix_importer'));
 
+		ee()->load->model('addons_model');
+
+		$new_relationship_ids = array();
+		$new_grid_ids = array();
+
 		// Do the import
-		$new_relationship_ids = ee()->playa_importer->do_import();
-		$new_grid_ids = ee()->matrix_importer->do_import();
+		if (ee()->addons_model->fieldtype_installed('playa'))
+		{
+			$new_relationship_ids = ee()->playa_importer->do_import();
+		}
+
+		if (ee()->addons_model->fieldtype_installed('matrix'))
+		{
+			$new_grid_ids = ee()->matrix_importer->do_import();
+		}
 
 		ee()->session->set_flashdata('success', sprintf(lang('import_completed'), count($new_relationship_ids), count($new_grid_ids)));
 		ee()->functions->redirect($this->_base_url);
