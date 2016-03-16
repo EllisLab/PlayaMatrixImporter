@@ -60,6 +60,12 @@ Matrix celltypes and native ExpressionEngine fieldtypes do not mirror functional
 
 If you run into anything, head on over to [the issues](https://github.com/EllisLab/PlayaMatrixImporter/issues) to see if a similar issue has been reported, or to submit a new one.
 
+## Change Log
+
+- 1.1 - March 16, 2016
+    - Fixed a bug (#1) where the importer would not work if either Playa or Matrix were uninstalled while the other was installed.
+    - Fixed a bug (#1) where importing a Playa field that had no relationships would cause errors.
+
 ## Additional Files
 
 You may be wondering what the rest of the files in this package are for. They are solely for development, so if you are forking the GitHub repo, they can be helpful. If you are just using the add-on in your ExpressionEngine installation, you can ignore all of these files.
