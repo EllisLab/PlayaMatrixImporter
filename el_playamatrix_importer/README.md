@@ -62,7 +62,9 @@ If you run into anything, head on over to [the issues](https://github.com/EllisL
 
 ## Change Log
 
-- 1.1 - March 16, 2016
+- 1.0.2 - May 9, 2016
+    - Fixed a bug (#2) where the importer may show an error if the `var_id` column was missing from the Matrix data table.
+- 1.0.1 - March 16, 2016
     - Fixed a bug (#1) where the importer would not work if either Playa or Matrix were uninstalled while the other was installed.
     - Fixed a bug (#1) where importing a Playa field that had no relationships would cause errors.
 
