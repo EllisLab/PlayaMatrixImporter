@@ -164,8 +164,12 @@ class Matrix_importer {
 	 */
 	private function get_matrix_columns()
 	{
-		$columns_query = ee()->db->where('var_id', NULL)
-			->get('matrix_cols')->result_array();
+		// Skip Low vars for now
+		if (ee()->db->field_exists('var_id', 'matrix_cols'))
+		{
+			ee()->db->where('var_id', NULL);
+		}
+		$columns_query = ee()->db->get('matrix_cols')->result_array();
 
 		$columns = array();
 		foreach ($columns_query as $column)
