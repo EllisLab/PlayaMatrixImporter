@@ -167,7 +167,8 @@ class Matrix_importer {
 		// Skip Low vars for now
 		if (ee()->db->field_exists('var_id', 'matrix_cols'))
 		{
-			ee()->db->where('var_id', NULL);
+			ee()->db->where('var_id', NULL)
+				->or_where('var_id', 0);
 		}
 		$columns_query = ee()->db->get('matrix_cols')->result_array();
 
