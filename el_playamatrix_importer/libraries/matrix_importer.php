@@ -127,7 +127,10 @@ class Matrix_importer {
 			}
 
 			// Fill Grid field with new data
-			ee()->db->insert_batch('channel_grid_field_'.$field_id, $new_data);
+			if ( ! empty($new_data))
+			{
+				ee()->db->insert_batch('channel_grid_field_'.$field_id, $new_data);
+			}
 
 			$matrix_to_grid_fields[$matrix['field_id']] = $field_id;
 		}
