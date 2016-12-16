@@ -155,6 +155,13 @@ class PlayaConverter
 
 		foreach ($playa_relationships as $playa_rel)
 		{
+			// Don't attempt to map orphaned data
+			if ( ! isset($matrix_to_grid_cols[$playa_rel['parent_col_id']]) OR
+				 ! isset($matrix_to_grid_fields[$playa_rel['parent_field_id']]))
+			{
+				continue;
+			}
+
 			$relationship = array(
 				'parent_id'			=> $playa_rel['parent_entry_id'],
 				'field_id'			=> $matrix_to_grid_cols[$playa_rel['parent_col_id']],

@@ -62,6 +62,8 @@ If you run into anything, head on over to [the issues](https://github.com/EllisL
 
 ## Change Log
 
+- 1.0.5 - December 16, 2016
+    - Fixed a bug (#5) where the importer may show errors when encountering orphaned Playa data belonging to a nonexistent Matrix field.
 - 1.0.4 - May 17, 2016
     - Fixed a bug where the importer may fail when importing a Matrix field that has no data.
 - 1.0.3 - May 10, 2016
