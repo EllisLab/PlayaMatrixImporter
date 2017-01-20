@@ -194,6 +194,12 @@ class Matrix_importer {
 	 */
 	private function get_matrix_data($matrix_to_grid_cols, $matrix_field_id, $playa_columns)
 	{
+		// Is Publisher installed? We'll need to bring that data over as well
+		if (ee()->addons_model->module_installed('publisher'))
+		{
+			ee()->db->select('publisher_lang_id, publisher_status');
+		}
+
 		// Let's get the data for these old columns to transfer over to our new columns
 		foreach ($matrix_to_grid_cols as $matrix_col_id => $grid_col_id)
 		{
@@ -203,12 +209,6 @@ class Matrix_importer {
 			{
 				ee()->db->select('col_id_'.$matrix_col_id);
 			}
-		}
-
-		// Is Publisher installed? We'll need to bring that data over as well
-		if (ee()->addons_model->module_installed('publisher'))
-		{
-			ee()->db->select('publisher_lang_id, publisher_status');
 		}
 
 		return ee()->db->select('row_id, entry_id, row_order')
