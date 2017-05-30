@@ -38,6 +38,32 @@ class OptionsCellConverterTest extends \PHPUnit_Framework_TestCase {
 		$return[] = array($expected, $matrix_settings, 'Test standard key value options');
 
 		$matrix_settings = array(
+			'options' => array(
+				'group1' => array(
+					'this' => 'This',
+					'is' => 'Is',
+					'a' => 'A',
+					'test' => 'Test'
+				),
+				'key' => 'value',
+				'group2' => array(
+					'this2' => 'This2',
+					'is2' => 'Is2',
+					'a2' => 'A2',
+					'test2' => 'Test2'
+				),
+			)
+		);
+
+		$expected = array(
+			'field_pre_populate' => 'n',
+			'field_fmt' => 'none',
+			'field_list_items' => "This\nIs\nA\nTest\nvalue\nThis2\nIs2\nA2\nTest2"
+		);
+
+		$return[] = array($expected, $matrix_settings, 'Test grouped standard key value options');
+
+		$matrix_settings = array(
 			'off_label' => 'NO',
 			'off_val' => '',
 			'on_label' => 'YES',

@@ -44,7 +44,16 @@ class OptionsCellConverter {
 
 		if (isset($settings['options']) && is_array($settings['options']))
 		{
-			$defaults['field_list_items'] = implode("\n", array_values($settings['options']));
+			// Some values may be arrays if options list is separated in to groups,
+			// we need to flatten the array
+			$new_values = array();
+			$iterator = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($settings['options']));
+			foreach ($iterator as $value)
+			{
+				$new_values[] = $value;
+			}
+
+			$defaults['field_list_items'] = implode("\n", $new_values);
 		}
 		// Switch celltype
 		else if (isset($settings['off_label']) && isset($settings['on_label']))

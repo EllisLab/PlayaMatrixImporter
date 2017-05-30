@@ -62,6 +62,8 @@ If you run into anything, head on over to [the issues](https://github.com/EllisL
 
 ## Change Log
 
+- 1.0.7 - May 30, 2017
+    - Fixed a bug (#12) where dropdown and select cells with groups would not get imported correctly.
 - 1.0.6 - January 19, 2017
     - Fixed a bug (#8) where the importer may not import data from the first Matrix field it encounters.
 - 1.0.5 - December 16, 2016
