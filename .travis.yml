@@ -8,10 +8,10 @@ php:
   - 7.0
 
 install:
-  - composer install
+  #- composer install
 
 script:
-  - vendor/bin/parallel-lint --exclude vendor .
+  #- vendor/bin/parallel-lint --exclude vendor .
   #- vendor/bin/phpunit
 
 before_deploy: "zip -r 'el_playamatrix_importer' el_playamatrix_importer"
