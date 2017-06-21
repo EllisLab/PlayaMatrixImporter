@@ -62,6 +62,8 @@ If you run into anything, head on over to [the issues](https://github.com/EllisL
 
 ## Change Log
 
+- 1.0.8 - June 21, 2017
+    - Fixed a bug (#10) where the importer may error when encountering orphaned Playa or Assets data.
 - 1.0.7 - May 30, 2017
     - Fixed a bug (#12) where dropdown and select cells with groups would not get imported correctly.
 - 1.0.6 - January 19, 2017
