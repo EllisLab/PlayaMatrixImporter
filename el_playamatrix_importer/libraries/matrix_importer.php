@@ -325,6 +325,12 @@ class Matrix_importer {
 				);
 			}
 
+			// Data didn't make it out of the converter? It's been orphaned
+			if (empty($new_relationships))
+			{
+				return;
+			}
+
 			ee()->db->insert_batch('relationships', $new_relationships);
 		}
 	}
