@@ -40,6 +40,13 @@ class AssetsCellConverter {
 	{
 		foreach ($assets_selections as &$row)
 		{
+			// Don't attempt to map orphaned data
+			if ( ! isset($matrix_to_grid_cols[$row['col_id']]) OR
+				 ! isset($matrix_to_grid_fields[$row['field_id']]))
+			{
+				continue;
+			}
+
 			$row['field_id'] = $matrix_to_grid_fields[$row['field_id']];
 			$row['col_id'] = $matrix_to_grid_cols[$row['col_id']];
 			$row['content_type'] = 'grid';

@@ -361,6 +361,12 @@ class Matrix_importer {
 				$matrix_to_grid_cols
 			);
 
+			// Data didn't make it out of the converter? It's been orphaned
+			if (empty($new_assets_selections))
+			{
+				return;
+			}
+
 			ee()->db->insert_batch('assets_selections', $new_assets_selections);
 		}
 	}
