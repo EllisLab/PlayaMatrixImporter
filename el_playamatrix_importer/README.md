@@ -47,10 +47,16 @@ Each celltype native to Matrix has been mapped to a native EE near-equivalent. I
 
 ## Gotchas
 
+### Matrix
+
 Matrix celltypes and native ExpressionEngine fieldtypes do not mirror functionality 1:1, so there are some issues to note when importing Matrix fields with certain celltypes.
 
 * Fieldpack List essentially stored its data like a Textarea would, so we've opted to map that celltype to a Textarea. But, this will not get you the front-end tag-pair syntax that comes with Fieldpack List that allows you to loop through the list items.
 * Fieldpack celltypes that deal with key/value options like Dropdown, Multiselect, Pill, Radio Buttons, and Switch will no longer have access to those keys in templates. Since ExpressionEngine's native equivalent fieldtypes only work with values, only the values will be preserved.
+
+### Playa
+
+* If your Playa fields have no limit set for the publish form, you may wish to enable a feature of Relationship fields, the [Maximum Entries limit](https://docs.expressionengine.com/latest/fieldtypes/relationships.html#maximum-entries). This setting lets you set a reasonable starting limit for what's initially loaded on the publish page. You can live-search the listing, so you still have access to all entries in that channel, but it conserves resources by not loading in thousands of entries unnecessarily.
 
 ## Other third-party add-on notes
 
