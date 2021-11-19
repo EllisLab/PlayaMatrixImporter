@@ -9,7 +9,7 @@ namespace PlayaMatrixImporter\Converters;
  * @author		EllisLab Dev Team
  * @copyright	Copyright (c) 2003 - 2016, EllisLab, Inc.
  * @license		http://ellislab.com/expressionengine/user-guide/license.html
- * @link		http://ellislab.com
+ * @link		http://packettide.com
  * @since		Version 2.10.2
  * @filesource
  */
@@ -23,7 +23,7 @@ namespace PlayaMatrixImporter\Converters;
  * @subpackage	Playa & Matrix Importer
  * @category	Modules
  * @author		EllisLab Dev Team
- * @link		http://ellislab.com
+ * @link		http://packettide.com
  */
 
 class TextCellConverter {

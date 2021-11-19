@@ -3,13 +3,13 @@
 require_once(PATH_THIRD.'el_playamatrix_importer/libraries/autoload.php');
 
 /**
- * ExpressionEngine - by EllisLab
+ * ExpressionEngine - by Packet Tide
  *
  * @package		ExpressionEngine
- * @author		EllisLab Dev Team
- * @copyright	Copyright (c) 2003 - 2016, EllisLab, Inc.
+ * @author		ExpressionEngine Dev Team
+ * @copyright	Copyright (c) 2003 - 2013, Packet Tide, LLC
  * @license		http://ellislab.com/expressionengine/user-guide/license.html
- * @link		http://ellislab.com
+ * @link		http://packettide.com
  * @since		Version 2.10.2
  * @filesource
  */
@@ -22,8 +22,8 @@ require_once(PATH_THIRD.'el_playamatrix_importer/libraries/autoload.php');
  * @package		ExpressionEngine
  * @subpackage	Playa & Matrix Importer
  * @category	Modules
- * @author		EllisLab Dev Team
- * @link		http://ellislab.com
+ * @author		Packet Tide
+ * @link		http://packettide.com
  */
 
 class El_playamatrix_importer_mcp {
