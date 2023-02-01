@@ -125,6 +125,7 @@ class MatrixConverter
 			'number'					=> 'text',
 			'playa'						=> 'relationship',
 			'rte'						=> 'rte',
+			'wygwam'					=> 'wygwam',
 			'text'						=> 'text'
 		);
 

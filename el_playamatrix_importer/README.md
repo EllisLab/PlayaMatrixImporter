@@ -1,4 +1,4 @@
-# Playa & Matrix Importer for ExpressionEngine 2
+# Playa & Matrix Importer for ExpressionEngine 2 - 6
 
 [![Build Status](https://travis-ci.org/EllisLab/PlayaMatrixImporter.svg?branch=master)](https://travis-ci.org/EllisLab/PlayaMatrixImporter)
 
@@ -8,7 +8,7 @@ This is a module for importing existing Playa and Matrix fields into new Relatio
 
 This importer was developed and tested in the context of at least:
 
-* ExpressionEngine 2.10.2
+* ExpressionEngine 2.10.2 +
 * Matrix 2.6.1
 * Playa 4.5.2
 

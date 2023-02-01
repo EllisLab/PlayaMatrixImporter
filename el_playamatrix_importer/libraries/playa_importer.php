@@ -28,32 +28,52 @@ use PlayaMatrixImporter\Converters\PlayaConverter;
 
 class Playa_importer {
 
+	private $EE3 = FALSE;
+	private $EE4 = FALSE;
+
 	/**
 	 * Performs the full import of all regular (non-Matrix) Playa channel fields
 	 * into native Relationships fields
 	 *
 	 * @return	array	Array of new Playa field IDs
 	 */
-	public function do_import()
+	public function do_import($fields)
 	{
+		if (defined('APP_VER') && version_compare(APP_VER, '3.0.0', '>='))
+		{
+			$this->EE3 = TRUE;
+		}
+		if (defined('APP_VER') && version_compare(APP_VER, '4.0.0', '>='))
+		{
+			$this->EE4 = TRUE;
+		}
+		
 		ee()->load->library('pm_import_common');
-		$playas = $this->get_playa_fields();
+		$playas = $this->get_playa_fields($fields);
 		$playa_relationships = ee()->pm_import_common->get_playa_relationships();
 
+
 		ee()->load->library('api');
-		ee()->api->instantiate('channel_fields');
 		ee()->load->model('addons_model');
 
-		$new_field_ids = array();
+				
+		if ($this->EE3)
+		{
+			ee()->legacy_api->instantiate('channel_fields');
+		}
+		else 
+		{
+			ee()->api->instantiate('channel_fields');
+		}		
 
-		$original_site_id = ee()->config->item('site_id');
+		$new_field_ids = array();
 
 		foreach ($playas as $playa)
 		{
 			// Let's be explicit about what's making up this new field
 			$new_relationship_field = array(
 				'site_id'				=> $playa['site_id'],
-				'group_id'				=> $playa['group_id'],
+				'group_id'				=> (isset($playa['group_id']) ? $playa['group_id'] : 0),
 				'field_label'			=> $playa['field_label'],
 				'field_name'			=> ee()->pm_import_common->get_unique_field_name($playa['field_name'], '_relate', $playa['site_id']),
 				'field_type'			=> 'relationship',
@@ -62,13 +82,34 @@ class Playa_importer {
 				'field_search'			=> $playa['field_search'],
 				'field_order'			=> 0
 			);
+			
+			if ($this->EE4) 
+			{
+				unset($new_relationship_field['group_id']);
+				
+				$field = ee('Model')->make('ChannelField');
+				$field->site_id     = $new_relationship_field['site_id'];
+				$field->field_name  = $new_relationship_field['field_name'];
+				$field->field_type  = $new_relationship_field['field_type'];
 
-			// Hack to prevent site ID mismatch error in API channel fields
-			ee()->config->config['site_id'] = $new_relationship_field['site_id'];
+				$field->set($new_relationship_field);
+				$field->save();
 
-			$field_id = ee()->api_channel_fields->update_field($new_relationship_field);
+				$field_id = $field->field_id;
+			}
+			else 
+			{
 
-			ee()->config->config['site_id'] = $original_site_id;
+				$original_site_id = ee()->config->item('site_id');
+
+				// Hack to prevent site ID mismatch error in API channel fields
+				ee()->config->config['site_id'] = $new_relationship_field['site_id'];
+
+				$field_id = ee()->api_channel_fields->update_field($new_relationship_field);
+
+				ee()->config->config['site_id'] = $original_site_id;
+			}
+			
 
 			$new_field_settings = PlayaConverter::convertSettings(unserialize(base64_decode($playa['field_settings'])));
 
@@ -99,7 +140,7 @@ class Playa_importer {
 				ee()->db->insert_batch('relationships', $new_relationships);
 			}
 
-			$new_field_ids[] = $field_id;
+			$new_field_ids[$playa['field_id']] = $field_id;
 		}
 
 		return $new_field_ids;
@@ -110,9 +151,10 @@ class Playa_importer {
 	 *
 	 * @return	array	Database result array of Playa fields
 	 */
-	public function get_playa_fields()
+	public function get_playa_fields($fields)
 	{
 		return ee()->db->where('field_type', 'playa')
+			->where_in('field_id', $fields)
 			->get('channel_fields')
 			->result_array();
 	}

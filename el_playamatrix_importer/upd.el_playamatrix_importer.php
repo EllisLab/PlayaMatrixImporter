@@ -62,8 +62,15 @@ class El_playamatrix_importer_upd {
 				'module_name'	=> $this->module_name
 			))->row('module_id');
 
-		ee()->db->where('module_id', $mod_id)
-			->delete('module_member_groups');
+		if (ee()->db->table_exists('module_member_groups')) {
+			ee()->db->where('module_id', $mod_id)
+				->delete('module_member_groups');
+		}	
+		
+		if (ee()->db->table_exists('module_member_roles')) {
+			ee()->db->where('module_id', $mod_id)
+				->delete('module_member_roles');
+		}
 
 		ee()->db->where('module_name', $this->module_name)
 			->delete('modules');
