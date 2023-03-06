@@ -1,4 +1,4 @@
-# Playa & Matrix Importer for ExpressionEngine 2 - 6
+# Playa & Matrix Importer for ExpressionEngine 2 - 7
 
 [![Build Status](https://travis-ci.org/EllisLab/PlayaMatrixImporter.svg?branch=master)](https://travis-ci.org/EllisLab/PlayaMatrixImporter)
 
@@ -31,6 +31,7 @@ Each celltype native to Matrix has been mapped to a native EE near-equivalent. I
 
 | Matrix celltype         | Mapped native fieldtype                      |
 | ----------------------- | -------------------------------------------- |
+| Assets                  | Assets                                         |
 | Date                    | Date                                         |
 | Fieldpack Checkboxes    | Checkboxes                                   |
 | Fieldpack Dropdown      | Select                                       |
@@ -68,6 +69,8 @@ If you run into anything, head on over to [the issues](https://github.com/EllisL
 
 ## Change Log
 
+- 1.0.9 - March 06, 2023
+    - Enabled assets importing from Matrix columns. Tested in EE7.
 - 1.0.8 - June 21, 2017
     - Fixed a bug (#10) where the importer may error when encountering orphaned Playa or Assets data.
 - 1.0.7 - May 30, 2017

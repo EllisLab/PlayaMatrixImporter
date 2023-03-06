@@ -113,6 +113,7 @@ class MatrixConverter
 	public static function mapColumnType($from_cell_type, $settings, $grid_fieldtypes = array())
 	{
 		$col_type_mapping = array(
+			'assets'					=> 'assets',
 			'date'						=> 'date',
 			'fieldpack_checkboxes'		=> 'checkboxes',
 			'fieldpack_dropdown'		=> 'select',
