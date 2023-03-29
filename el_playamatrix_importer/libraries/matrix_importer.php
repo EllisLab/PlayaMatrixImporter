@@ -102,7 +102,8 @@ class Matrix_importer {
 				'field_instructions'	=> $matrix['field_instructions'],
 				'field_required'		=> $matrix['field_required'],
 				'field_search'			=> $matrix['field_search'],
-				'field_order'			=> 0
+				'field_order'			=> 0,
+				'field_list_items'		=> ''
 			);
 			
 
@@ -332,10 +333,10 @@ class Matrix_importer {
 				}
 			}
 			
-			if (ee()->db->table_exists('exp_channels_channel_fields'))
+			if (ee()->db->table_exists('channels_channel_fields'))
 			{
 				$rows = ee()->db->where('field_id', $matrix_field_id)
-					->get('exp_channels_channel_fields')
+					->get('channels_channel_fields')
 					->result_array();
 			
 				foreach ($rows as $row) {
@@ -343,7 +344,7 @@ class Matrix_importer {
 						'field_id' => $grid_field_id,
 						'channel_id' => $row['channel_id']
 					);
-					ee()->db->insert('exp_channels_channel_fields', $data);
+					ee()->db->insert('channels_channel_fields', $data);
 				}
 			}
 		}

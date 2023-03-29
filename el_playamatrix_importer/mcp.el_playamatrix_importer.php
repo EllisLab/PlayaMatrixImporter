@@ -274,10 +274,10 @@ class El_playamatrix_importer_mcp {
 				}
 			}
 			
-			if (ee()->db->table_exists('exp_channels_channel_fields'))
+			if (ee()->db->table_exists('channels_channel_fields'))
 			{
 				$rows = ee()->db->where('field_id', $old_field_id)
-					->get('exp_channels_channel_fields')
+					->get('channels_channel_fields')
 					->result_array();
 			
 				foreach ($rows as $row) {
@@ -285,7 +285,7 @@ class El_playamatrix_importer_mcp {
 						'field_id' => $new_field_id,
 						'channel_id' => $row['channel_id']
 					);
-					ee()->db->insert('exp_channels_channel_fields', $data);
+					ee()->db->insert('channels_channel_fields', $data);
 				}
 			}
 		}

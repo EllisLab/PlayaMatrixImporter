@@ -80,7 +80,8 @@ class Playa_importer {
 				'field_instructions'	=> $playa['field_instructions'],
 				'field_required'		=> $playa['field_required'],
 				'field_search'			=> $playa['field_search'],
-				'field_order'			=> 0
+				'field_order'			=> 0,
+				'field_list_items'		=> ''
 			);
 			
 			if ($this->EE4) 
