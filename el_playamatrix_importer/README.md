@@ -9,8 +9,8 @@ This is a module for importing existing Playa and Matrix fields into new Relatio
 This importer was developed and tested in the context of at least:
 
 * ExpressionEngine 2.10.2 +
-* Matrix 2.6.1
-* Playa 4.5.2
+* Matrix 2.6.1 +
+* Playa 4.5.2 +
 
 Best to make sure any third-party celltypes you have that are also compatible with Grid are up-to-date as well to ensure their Grid implementations are in place.
 
@@ -31,7 +31,7 @@ Each celltype native to Matrix has been mapped to a native EE near-equivalent. I
 
 | Matrix celltype         | Mapped native fieldtype                      |
 | ----------------------- | -------------------------------------------- |
-| Assets                  | Assets                                         |
+| Assets                  | Assets                                       |
 | Date                    | Date                                         |
 | Fieldpack Checkboxes    | Checkboxes                                   |
 | Fieldpack Dropdown      | Select                                       |
@@ -44,7 +44,9 @@ Each celltype native to Matrix has been mapped to a native EE near-equivalent. I
 | Number                  | Text (with number content type)              |
 | Playa                   | Relationship                                 |
 | Rich Text               | Rich Text                                    |
+| Wygwam                  | Wygwam                                       |
 | Text                    | Text for single line, Textarea for multiline |
+| Structure               | Structure                                    |
 
 ## Gotchas
 
@@ -69,6 +71,9 @@ If you run into anything, head on over to [the issues](https://github.com/EllisL
 
 ## Change Log
 
+- 1.0.10 - Apr 25, 2023
+    - Fixed issue with inserting field 'field_list_items' in sql strict mode (Mar 29, 2023)
+    - Added support for Structure field in Matrix.
 - 1.0.9 - March 06, 2023
     - Enabled assets importing from Matrix columns. Tested in EE7.
 - 1.0.8 - June 21, 2017
