@@ -127,7 +127,8 @@ class MatrixConverter
 			'playa'						=> 'relationship',
 			'rte'						=> 'rte',
 			'wygwam'					=> 'wygwam',
-			'text'						=> 'text'
+			'text'						=> 'text',
+			'structure'					=> 'structure'
 		);
 
 		// Make sure Text celltypes with the multiline option set to 'y'
