@@ -113,6 +113,7 @@ class MatrixConverter
 	public static function mapColumnType($from_cell_type, $settings, $grid_fieldtypes = array())
 	{
 		$col_type_mapping = array(
+			'assets'					=> 'assets',
 			'date'						=> 'date',
 			'fieldpack_checkboxes'		=> 'checkboxes',
 			'fieldpack_dropdown'		=> 'select',
@@ -125,7 +126,9 @@ class MatrixConverter
 			'number'					=> 'text',
 			'playa'						=> 'relationship',
 			'rte'						=> 'rte',
-			'text'						=> 'text'
+			'wygwam'					=> 'wygwam',
+			'text'						=> 'text',
+			'structure'					=> 'structure'
 		);
 
 		// Make sure Text celltypes with the multiline option set to 'y'

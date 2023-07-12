@@ -116,7 +116,7 @@ class Pm_import_common {
 				'null'       => TRUE,
 				'default'    => 'open'
 			)
-		));
+		), 'row_order');
 	}
 }
 
