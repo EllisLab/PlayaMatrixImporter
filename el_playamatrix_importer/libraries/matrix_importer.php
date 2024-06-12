@@ -30,30 +30,57 @@ use PlayaMatrixImporter\Converters\AssetsCellConverter;
 
 class Matrix_importer {
 
+	private $EE3 = FALSE;
+	private $EE4 = FALSE;
+
 	/**
 	 * Performs the full import of all Matrix channel fields into native Grid fields
 	 *
 	 * @return	array	Array of new Grid field IDs
 	 */
-	public function do_import()
+	public function do_import($fields)
 	{
+		if (defined('APP_VER') && version_compare(APP_VER, '3.0.0', '>='))
+		{
+			$this->EE3 = TRUE;
+		}
+		if (defined('APP_VER') && version_compare(APP_VER, '4.0.0', '>='))
+		{
+			$this->EE4 = TRUE;
+		}
+		
 		ee()->load->library('pm_import_common');
 
-		$matricies = $this->get_matrix_fields();
-		$columns = $this->get_matrix_columns();
+		$matricies = $this->get_matrix_fields($fields);
+		$columns = $this->get_matrix_columns($fields);
+
+
+		ee()->load->library('api');
+		ee()->load->model('grid_model');
+		ee()->load->model('addons_model');
+		
+		
+		if ($this->EE3)
+		{
+			ee()->legacy_api->instantiate('channel_fields');
+		}
+		else 
+		{
+			ee()->api->instantiate('channel_fields');
+		}
+
+		$ft_api = ee()->api_channel_fields;
+		$fieldtypes = $ft_api->fetch_installed_fieldtypes();
 
 		// Load Grid package so we can get a list of Grid compatible fieldtypes
 		ee()->load->add_package_path(PATH_FT.'grid/');
 
 		ee()->load->library('grid_lib');
+
 		$grid_fieldtypes = array_keys(ee()->grid_lib->get_grid_fieldtypes());
 
 		ee()->load->remove_package_path(PATH_FT.'grid/');
-
-		ee()->load->library('api');
-		ee()->api->instantiate('channel_fields');
-		ee()->load->model('grid_model');
-		ee()->load->model('addons_model');
+		
 
 		$original_site_id = ee()->config->item('site_id');
 
@@ -62,31 +89,55 @@ class Matrix_importer {
 		$matrix_to_grid_fields = array();
 		$matrix_to_grid_cols = array();
 
+
 		foreach ($matricies as $matrix)
 		{
 			// Let's be explicit about what's making up this new field
 			$new_grid_field = array(
 				'site_id'				=> $matrix['site_id'],
-				'group_id'				=> $matrix['group_id'],
+				'group_id'				=> (isset($matrix['group_id']) ? $matrix['group_id'] : 0),
 				'field_label'			=> $matrix['field_label'],
 				'field_name'			=> ee()->pm_import_common->get_unique_field_name($matrix['field_name'], '_grid', $matrix['site_id']),
 				'field_type'			=> 'grid',
 				'field_instructions'	=> $matrix['field_instructions'],
 				'field_required'		=> $matrix['field_required'],
 				'field_search'			=> $matrix['field_search'],
-				'field_order'			=> 0
+				'field_order'			=> 0,
+				'field_list_items'		=> ''
 			);
+			
 
 			// Hack to prevent errors from showing from Grid_lib when we create the field
 			$_POST['grid']['cols'] = array();
 
-			// Hack to prevent site ID mismatch error in API channel fields
-			ee()->config->config['site_id'] = $new_grid_field['site_id'];
 
-			$field_id = ee()->api_channel_fields->update_field($new_grid_field);
+			if ($this->EE4)
+			{
+				unset($new_grid_field['group_id']);
+				
+				$field = ee('Model')->make('ChannelField');
+				$field->site_id     = $new_grid_field['site_id'];
+				$field->field_name  = $new_grid_field['field_name'];
+				$field->field_type  = $new_grid_field['field_type'];
 
-			// Reset the hack
-			ee()->config->config['site_id'] = $original_site_id;
+				$field->set($new_grid_field);
+				$field->save();
+
+				$field_id = $field->field_id;
+			}
+			else 
+			{
+
+				// Hack to prevent site ID mismatch error in API channel fields
+				ee()->config->config['site_id'] = $new_grid_field['site_id'];
+
+				// Create field - could use legacy/models/grid_model.php or Addons/grid/Grid_lib.php to create non-legacy fields
+				$field_id = ee()->api_channel_fields->update_field($new_grid_field);
+
+				// Reset the hack
+				ee()->config->config['site_id'] = $original_site_id;
+			}
+			
 
 			$new_field_settings = MatrixConverter::convertSettings(unserialize(base64_decode($matrix['field_settings'])));
 
@@ -144,8 +195,10 @@ class Matrix_importer {
 		// For columns marked as searchable, copy their searchable text over
 		// to the new Grid fields=
 		$this->import_searchable_data($matrix_to_grid_fields);
+		
 
-		return array_values($matrix_to_grid_fields);
+		//return array_values($matrix_to_grid_fields);
+		return $matrix_to_grid_fields;
 	}
 
 	/**
@@ -153,9 +206,10 @@ class Matrix_importer {
 	 *
 	 * @return	array	Database result array of Matrix fields
 	 */
-	private function get_matrix_fields()
+	private function get_matrix_fields($fields)
 	{
 		return ee()->db->where('field_type', 'matrix')
+			->where_in('field_id', $fields)
 			->get('channel_fields')
 			->result_array();
 	}
@@ -165,7 +219,7 @@ class Matrix_importer {
 	 *
 	 * @return	array	Database result array of Matrix fields
 	 */
-	private function get_matrix_columns()
+	private function get_matrix_columns($fields)
 	{
 		// Skip Low vars for now
 		if (ee()->db->field_exists('var_id', 'matrix_cols'))
@@ -173,7 +227,7 @@ class Matrix_importer {
 			ee()->db->where('var_id', NULL)
 				->or_where('var_id', 0);
 		}
-		$columns_query = ee()->db->get('matrix_cols')->result_array();
+		$columns_query = ee()->db->where_in('field_id', $fields)->get('matrix_cols')->result_array();
 
 		$columns = array();
 		foreach ($columns_query as $column)
@@ -195,7 +249,7 @@ class Matrix_importer {
 	private function get_matrix_data($matrix_to_grid_cols, $matrix_field_id, $playa_columns)
 	{
 		// Is Publisher installed? We'll need to bring that data over as well
-		if (ee()->addons_model->module_installed('publisher'))
+		if (ee()->addons_model->module_installed('publisher') && ee()->db->field_exists('publisher_lang_id', 'matrix_data'))
 		{
 			ee()->db->select('publisher_lang_id, publisher_status');
 		}
@@ -231,15 +285,71 @@ class Matrix_importer {
 			return FALSE;
 		}
 
+		$data = array();
+
 		foreach ($matrix_field_ids as $field_id)
 		{
+			$table = 'channel_data';
+			
 			ee()->db->select('field_id_'.$field_id);
+			if (ee()->db->table_exists('channel_data_field_'.$field_id))
+			{
+				$table = 'channel_data_field_'.$field_id;
+			}
+			
+			$result = ee()->db->select('entry_id')
+				->get($table)
+				->result_array();
+				
+			$data = array_merge($data, $result);
 		}
 
-		return ee()->db->select('entry_id')
-			->get('channel_data')
-			->result_array();
+		return $data;
 	}
+	
+	
+	/**
+	 * Copies over field groups from Matrix fields into their new Grid fields'
+	 *
+	 * @param	array	Associative array of Matrix field IDs to their corresponding Grid field IDs
+	 * @return	void
+	 */
+	private function import_field_groups($matrix_to_grid_fields)
+	{
+		foreach ($matrix_to_grid_fields as $matrix_field_id => $grid_field_id) 
+		{
+			if (ee()->db->table_exists('channel_field_groups_fields'))
+			{
+				$rows = ee()->db->where('field_id', $matrix_field_id)
+					->get('channel_field_groups_fields')
+					->result_array();
+			
+				foreach ($rows as $row) {
+					$data = array(
+						'field_id' => $grid_field_id,
+						'group_id' => $row['group_id']
+					);
+					ee()->db->insert('channel_field_groups_fields', $data);
+				}
+			}
+			
+			if (ee()->db->table_exists('channels_channel_fields'))
+			{
+				$rows = ee()->db->where('field_id', $matrix_field_id)
+					->get('channels_channel_fields')
+					->result_array();
+			
+				foreach ($rows as $row) {
+					$data = array(
+						'field_id' => $grid_field_id,
+						'channel_id' => $row['channel_id']
+					);
+					ee()->db->insert('channels_channel_fields', $data);
+				}
+			}
+		}
+	}
+	
 
 	/**
 	 * Copys over searchable data from Matrix fields into their new Grid fields'
@@ -252,13 +362,8 @@ class Matrix_importer {
 	{
 		if ($channel_data = $this->get_matrix_channel_data(array_keys($matrix_to_grid_fields)))
 		{
-			$new_channel_data = array();
-
 			foreach ($channel_data as $row)
 			{
-				$update = FALSE;
-				$new_row = array();
-
 				// Go over each field and map the field IDs to the new ones
 				foreach ($row as $key => $value)
 				{
@@ -270,21 +375,32 @@ class Matrix_importer {
 
 					$matrix_field_id = str_replace('field_id_', '', $key);
 
-					$new_row['field_id_'.$matrix_to_grid_fields[$matrix_field_id]] = $value;
-				}
+					$field_id = $matrix_to_grid_fields[$matrix_field_id];
 
-				// Any searchable data in this row? If so, add it
-				if ( ! empty($new_row))
-				{
-					$new_row['entry_id'] = $row['entry_id'];
-					$new_channel_data[] = $new_row;
-				}
-			}
+					$data = array();
 
-			// Update entry data with searchable data, if we ahve any
-			if ( ! empty($new_channel_data))
-			{
-				ee()->db->update_batch('channel_data', $new_channel_data, 'entry_id');
+					$data['field_id_'.$field_id] = $value;
+					$data['field_ft_'.$field_id] = 'none';
+					$where['entry_id'] = $row['entry_id'];
+
+					/* 
+					// cannot use table_exists directly after creating it - returns false
+					$table = 'channel_data';
+					if (ee()->db->table_exists('channel_data_field_'.$field_id))
+					{
+						$table = 'channel_data_field_'.$field_id;
+					}
+					*/
+
+					$table = 'channel_data';
+					if ($this->EE4) 
+					{
+						$table = 'channel_data_field_'.$field_id;
+					}
+
+					ee()->db->update($table, $data, $where);
+					
+				}
 			}
 		}
 	}
