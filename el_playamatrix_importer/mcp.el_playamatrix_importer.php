@@ -32,6 +32,7 @@ class El_playamatrix_importer_mcp {
 
 	private $_base_url;	
 	private $site_id = 1;
+	private $_form_base_url;
 	
 	private $EE3 = FALSE;
 
