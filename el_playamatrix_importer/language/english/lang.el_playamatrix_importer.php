@@ -20,7 +20,8 @@ $lang = array(
 	'import_success' => 'Import Successful',
 	'import_fail' => 'Import Failed',
 	'import_completed' => 'Success: Import has created %d new Relationship fields and %d new Grid fields',
-	'import_no_fields' => 'Failed: No Matrix or Playa fields selected'
+	'import_no_fields' => 'Failed: No Matrix or Playa fields selected',
+	'already_imported' => 'already imported as %s [%s]'
 );
 
 // EOF

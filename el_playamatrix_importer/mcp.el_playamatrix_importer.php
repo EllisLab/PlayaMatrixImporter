@@ -81,9 +81,42 @@ class El_playamatrix_importer_mcp {
 			->get('channel_fields')
 			->result_array();
 
+		// Existing Grid and Relationship fields, used to flag fields that have already been imported
+		$imported_fields = array();
+
+		$existing_fields = ee()->db
+			->select('field_name, field_type')
+			->where_in('field_type', array('grid', 'relationship'))
+			->where_in('site_id', array(0, $this->site_id))
+			->get('channel_fields')
+			->result_array();
+
+		foreach ($existing_fields as $existing_field)
+		{
+			$imported_fields[$existing_field['field_name']] = $existing_field['field_type'];
+		}
+
 		foreach ($channel_fields as $channel_field)
 		{
-			$fields[$channel_field['field_id']] = '['.$channel_field['field_id'].'] '.$channel_field['field_label'].': '.$channel_field['field_name'].' - ['.$channel_field['field_type'].']';
+			$label = htmlspecialchars('['.$channel_field['field_id'].'] '.$channel_field['field_label'].': '.$channel_field['field_name'].' - ['.$channel_field['field_type'].']', ENT_QUOTES, 'UTF-8');
+
+			if ($channel_field['field_type'] == 'matrix')
+			{
+				$new_name = $channel_field['field_name'].'_grid';
+				$new_type = 'grid';
+			}
+			else
+			{
+				$new_name = $channel_field['field_name'].'_relate';
+				$new_type = 'relationship';
+			}
+
+			if (isset($imported_fields[$new_name]) && $imported_fields[$new_name] == $new_type)
+			{
+				$label .= ' <i>('.sprintf(lang('already_imported'), htmlspecialchars($new_name, ENT_QUOTES, 'UTF-8'), $new_type).')</i>';
+			}
+
+			$fields[$channel_field['field_id']] = $label;
 		}
 		
 		$text_fields = ee()->db
